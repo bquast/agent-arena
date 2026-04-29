@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">⚔ AGENT<span>ARENA</span></div>
+    <div class="subtitle">Head-to-head LLM agentic task evaluation</div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p>Each task runs on two anonymous models. Inspect their reasoning traces, then vote for the better agent.</p>
+    </section>
+
+    <div class="task-grid" id="taskGrid">
+      <div class="loading">Loading tasks…</div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Votes stored in D1 · Models configured via env vars</span>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

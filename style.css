@@ -1,0 +1,429 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+  --bg:        #0a0a0f;
+  --surface:   #111118;
+  --border:    #2a2a3a;
+  --accent:    #e8ff47;
+  --accent2:   #7b61ff;
+  --text:      #e8e8f0;
+  --muted:     #666680;
+  --green:     #3ddc84;
+  --red:       #ff5252;
+  --radius:    6px;
+  --mono:      'IBM Plex Mono', monospace;
+  --sans:      'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.subtitle {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── Main ── */
+main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.intro {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  border-left: 3px solid var(--accent2);
+  padding-left: 1rem;
+}
+
+/* ── Task Grid ── */
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.task-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.task-card:hover {
+  background: #16161f;
+}
+
+.task-card:hover .task-arrow {
+  transform: translateX(4px);
+}
+
+.task-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+
+.task-name {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.task-desc {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 2px;
+}
+
+.task-arrow {
+  color: var(--accent);
+  font-size: 1.1rem;
+  transition: transform 0.15s;
+}
+
+.loading {
+  grid-column: 1/-1;
+  padding: 3rem;
+  text-align: center;
+  font-family: var(--mono);
+  color: var(--muted);
+}
+
+/* ── Task Page ── */
+.task-description {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border-left: 3px solid var(--accent2);
+  line-height: 1.6;
+}
+
+.run-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-run {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn-run:hover { opacity: 0.85; }
+.btn-run:active { transform: scale(0.97); }
+.btn-run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.run-status {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ── Arena ── */
+.arena {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  background: var(--border);
+  min-height: 400px;
+}
+
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  padding: 1rem 0.5rem;
+  letter-spacing: 0.2em;
+}
+
+.agent-panel {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-header {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background: var(--bg);
+}
+
+.agent-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.agent-meta {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* ── Trace ── */
+.trace {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.trace-step {
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.step-num {
+  background: var(--border);
+  color: var(--muted);
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+
+.step-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.step-type.think   { color: var(--accent2); }
+.step-type.action  { color: var(--accent); }
+.step-type.result  { color: var(--green); }
+.step-type.error   { color: var(--red); }
+
+.step-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+}
+
+.step-content.think-content {
+  border-left: 2px solid var(--accent2);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.final-answer {
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  background: var(--bg);
+}
+
+.final-answer-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+}
+
+.final-answer-text {
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+/* ── Vote buttons ── */
+.btn-vote {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.btn-vote:hover {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+.btn-vote.winner {
+  background: var(--green);
+  color: #000;
+  border-color: var(--green);
+}
+
+.btn-vote:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Vote result ── */
+.vote-result {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: var(--surface);
+}
+
+.vote-result .reveal-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.vote-result .model-reveal {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.model-a { color: var(--accent); }
+.model-b { color: var(--accent2); }
+
+/* ── Spinner ── */
+.spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Footer ── */
+footer {
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 700px) {
+  .arena {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .vs-divider {
+    writing-mode: horizontal-tb;
+    padding: 0.5rem;
+  }
+}

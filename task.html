@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task – Agent Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">⚔ AGENT<span>ARENA</span></a>
+    <div class="subtitle" id="taskTitle">Loading task…</div>
+  </header>
+
+  <main>
+    <div class="task-description" id="taskDescription"></div>
+
+    <div class="run-bar">
+      <button id="runBtn" class="btn-run">▶ Run Both Agents</button>
+      <div class="run-status" id="runStatus"></div>
+    </div>
+
+    <div class="arena" id="arena" style="display:none">
+      <div class="agent-panel" id="panelA">
+        <div class="agent-header">
+          <span class="agent-label">Model α</span>
+          <span class="agent-meta" id="metaA"></span>
+        </div>
+        <div class="trace" id="traceA"></div>
+        <div class="final-answer" id="answerA"></div>
+        <button class="btn-vote" id="voteA" data-side="A">👍 Vote for α</button>
+      </div>
+
+      <div class="vs-divider">VS</div>
+
+      <div class="agent-panel" id="panelB">
+        <div class="agent-header">
+          <span class="agent-label">Model β</span>
+          <span class="agent-meta" id="metaB"></span>
+        </div>
+        <div class="trace" id="traceB"></div>
+        <div class="final-answer" id="answerB"></div>
+        <button class="btn-vote" id="voteB" data-side="B">👍 Vote for β</button>
+      </div>
+    </div>
+
+    <div class="vote-result" id="voteResult" style="display:none"></div>
+  </main>
+
+  <script src="task.js" defer></script>
+</body>
+</html>
