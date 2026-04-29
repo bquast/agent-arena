@@ -3,28 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agent Arena</title>
+  <title>Agent Arena — Agentic Task Battle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="logo">⚔ AGENT<span>ARENA</span></div>
-    <div class="subtitle">Head-to-head LLM agentic task evaluation</div>
-  </header>
 
   <main>
-    <section class="intro">
-      <p>Each task runs on two anonymous models. Inspect their reasoning traces, then vote for the better agent.</p>
-    </section>
 
-    <div class="task-grid" id="taskGrid">
-      <div class="loading">Loading tasks…</div>
+    <!-- Loading -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-inner">
+        <div class="logo-mark">AgentArena</div>
+        <div class="spinner"></div>
+        <div id="loading-msg">Running agents…</div>
+        <div class="loading-sub">Two models · one task · you decide</div>
+      </div>
     </div>
-  </main>
 
-  <footer>
-    <span>Votes stored in D1 · Models configured via env vars</span>
-  </footer>
+    <!-- Arena -->
+    <div id="arena" style="display:none">
+
+      <div class="prompt-box">
+        <div class="prompt-meta">
+          <span class="prompt-category" id="prompt-category"></span>
+          <span class="prompt-num" id="prompt-num"></span>
+        </div>
+        <div class="prompt-text" id="prompt-text"></div>
+        <div class="prompt-logo">AgentArena</div>
+      </div>
+
+      <div class="battle-grid">
+
+        <!-- Agent A -->
+        <div class="agent-card" id="card-a">
+          <div class="card-header">
+            <span class="model-label">Agent α</span>
+            <span class="model-name hidden" id="model-a-name"></span>
+            <span class="card-status" id="status-a">running…</span>
+          </div>
+          <div class="trace-block" id="trace-a">
+            <div class="trace-placeholder">Waiting for agent…</div>
+          </div>
+          <div class="output-box">
+            <div class="output-label">final output</div>
+            <pre class="output-text" id="output-a"></pre>
+          </div>
+        </div>
+
+        <!-- Agent B -->
+        <div class="agent-card" id="card-b">
+          <div class="card-header">
+            <span class="model-label">Agent β</span>
+            <span class="model-name hidden" id="model-b-name"></span>
+            <span class="card-status" id="status-b">running…</span>
+          </div>
+          <div class="trace-block" id="trace-b">
+            <div class="trace-placeholder">Waiting for agent…</div>
+          </div>
+          <div class="output-box">
+            <div class="output-label">final output</div>
+            <pre class="output-text" id="output-b"></pre>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Vote -->
+      <div class="vote-area" id="vote-area">
+        <button class="vote-btn" id="vote-a" onclick="vote('A')" disabled>Vote α</button>
+        <button class="vote-btn skip-btn" id="vote-skip" onclick="vote('skip')" disabled>Skip</button>
+        <button class="vote-btn" id="vote-b" onclick="vote('B')" disabled>Vote β</button>
+      </div>
+
+      <!-- After vote -->
+      <div class="next-area" id="next-area" style="display:none">
+        <div class="vote-result" id="vote-result"></div>
+        <button class="next-btn" onclick="nextBattle()">Next battle →</button>
+      </div>
+
+    </div>
+
+  </main>
 
   <script src="app.js" defer></script>
 </body>

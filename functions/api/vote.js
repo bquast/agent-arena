@@ -19,8 +19,8 @@ export async function onRequest(context) {
   }
 
   const { run_id, vote } = body;
-  if (!run_id || !['A', 'B'].includes(vote)) {
-    return new Response(JSON.stringify({ error: 'run_id and vote (A|B) required' }), { status: 400, headers });
+  if (!run_id || !['A', 'B', 'skip'].includes(vote)) {
+    return new Response(JSON.stringify({ error: 'run_id and vote (A|B|skip) required' }), { status: 400, headers });
   }
 
   try {
