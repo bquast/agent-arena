@@ -426,3 +426,20 @@ main {
   main           { padding: 16px 14px 60px; }
   .trace-block   { max-height: 280px; }
 }
+
+/* ── Inline spinner (running state) ── */
+.inline-spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.card-status.running { color: var(--primary); }

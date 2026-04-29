@@ -1,12 +1,10 @@
 // AgentArena — app.js
 
-let currentTask   = null;
-let taskPool      = [];
-let sessionVotes  = { A: 0, B: 0, skip: 0 };
-let modelA = '', modelB = '';
-let runId  = null;
-let bothReady = false;
-let battleNum = 0;
+let currentTask  = null;
+let taskPool     = [];
+let sessionVotes = { A: 0, B: 0, skip: 0 };
+let runId        = null;
+let battleNum    = 0;
 
 const TASKS = [
   {
@@ -111,45 +109,35 @@ async function loadNextBattle() {
 
   currentTask = taskPool.pop();
   runId       = null;
-  bothReady   = false;
   battleNum++;
 
-  // Randomly assign model names (revealed after vote)
-  const pair = shuffle(['Model α', 'Model β']);
-  modelA = pair[0];
-  modelB = pair[1];
-
-  // Show loading, hide arena
-  $('loading-screen').style.display = 'flex';
-  $('loading-msg').textContent = 'Running agents…';
-  $('arena').style.display = 'none';
-
-  // Reset state
-  $('card-a').className  = 'agent-card';
-  $('card-b').className  = 'agent-card';
-  $('trace-a').innerHTML = '<div class="trace-placeholder">Waiting for agent…</div>';
-  $('trace-b').innerHTML = '<div class="trace-placeholder">Waiting for agent…</div>';
-  $('output-a').textContent = '';
-  $('output-b').textContent = '';
-  $('status-a').textContent = 'running…';
-  $('status-a').className   = 'card-status';
-  $('status-b').textContent = 'running…';
-  $('status-b').className   = 'card-status';
-  $('model-a-name').textContent = '';
-  $('model-b-name').textContent = '';
+  // Show arena immediately with running state — no loading gate
+  $('loading-screen').style.display = 'none';
+  $('arena').style.display          = 'block';
+  $('card-a').className             = 'agent-card';
+  $('card-b').className             = 'agent-card';
+  $('trace-a').innerHTML            = '<div class="trace-placeholder"><span class="inline-spinner"></span> Agent running…</div>';
+  $('trace-b').innerHTML            = '<div class="trace-placeholder"><span class="inline-spinner"></span> Agent running…</div>';
+  $('output-a').textContent         = '';
+  $('output-b').textContent         = '';
+  $('status-a').textContent         = 'running…';
+  $('status-a').className           = 'card-status running';
+  $('status-b').textContent         = 'running…';
+  $('status-b').className           = 'card-status running';
+  $('model-a-name').textContent     = '';
+  $('model-b-name').textContent     = '';
   $('model-a-name').classList.add('hidden');
   $('model-b-name').classList.add('hidden');
-  $('vote-a').disabled   = true;
-  $('vote-b').disabled   = true;
-  $('vote-skip').disabled = true;
-  $('vote-area').style.display = 'grid';
-  $('next-area').style.display = 'none';
+  $('vote-a').disabled              = true;
+  $('vote-b').disabled              = true;
+  $('vote-skip').disabled           = true;
+  $('vote-area').style.display      = 'grid';
+  $('next-area').style.display      = 'none';
 
-  $('prompt-category').textContent = currentTask.category;
-  $('prompt-num').textContent      = `battle ${battleNum}`;
-  $('prompt-text').textContent     = currentTask.name;
+  $('prompt-category').textContent  = currentTask.category;
+  $('prompt-num').textContent       = `battle ${battleNum}`;
+  $('prompt-text').textContent      = currentTask.name;
 
-  // Single call — backend runs both models in parallel, returns {a, b}
   runBattle();
 }
 
@@ -162,36 +150,44 @@ async function runBattle() {
 
     runId = data.run_id;
 
-    renderTrace('trace-a', data.a.steps);
-    renderOutput('output-a', data.a.output);
-    $('status-a').textContent = `${data.a.steps.length} steps · ${data.ms}ms`;
-    $('status-a').className   = 'card-status done';
+    // Render A
+    if (data.a && data.a.steps && data.a.steps.length > 0) {
+      renderTrace('trace-a', data.a.steps);
+      renderOutput('output-a', data.a.output);
+      $('status-a').textContent = `${data.a.steps.length} steps · ${data.ms}ms`;
+      $('status-a').className   = 'card-status done';
+    } else {
+      const errA = data.a && data.a.error ? data.a.error : 'No response from model';
+      $('trace-a').innerHTML    = `<div class="trace-error">${escHtml(errA)}</div>`;
+      $('status-a').textContent = 'error';
+      $('status-a').className   = 'card-status error';
+    }
 
-    renderTrace('trace-b', data.b.steps);
-    renderOutput('output-b', data.b.output);
-    $('status-b').textContent = `${data.b.steps.length} steps · ${data.ms}ms`;
-    $('status-b').className   = 'card-status done';
+    // Render B
+    if (data.b && data.b.steps && data.b.steps.length > 0) {
+      renderTrace('trace-b', data.b.steps);
+      renderOutput('output-b', data.b.output);
+      $('status-b').textContent = `${data.b.steps.length} steps · ${data.ms}ms`;
+      $('status-b').className   = 'card-status done';
+    } else {
+      const errB = data.b && data.b.error ? data.b.error : 'No response from model';
+      $('trace-b').innerHTML    = `<div class="trace-error">${escHtml(errB)}</div>`;
+      $('status-b').textContent = 'error';
+      $('status-b').className   = 'card-status error';
+    }
 
   } catch (e) {
-    ['a','b'].forEach(s => {
+    ['a', 'b'].forEach(s => {
       $(`trace-${s}`).innerHTML    = `<div class="trace-error">${escHtml(e.message)}</div>`;
       $(`status-${s}`).textContent = 'error';
       $(`status-${s}`).className   = 'card-status error';
     });
   }
 
-  checkBothReady();
-}
-
-function checkBothReady() {
-  if (!bothReady) {
-    bothReady = true;
-    $('loading-screen').style.display = 'none';
-    $('arena').style.display = 'block';
-    $('vote-a').disabled    = false;
-    $('vote-b').disabled    = false;
-    $('vote-skip').disabled = false;
-  }
+  // Enable voting regardless of errors
+  $('vote-a').disabled    = false;
+  $('vote-b').disabled    = false;
+  $('vote-skip').disabled = false;
 }
 
 // ── Render helpers ────────────────────────────────────────────────────────────
@@ -200,7 +196,7 @@ function renderTrace(elId, steps) {
   const el = $(elId);
   el.innerHTML = '';
   steps.forEach((step, i) => {
-    const div  = document.createElement('div');
+    const div = document.createElement('div');
     div.className = 'trace-step';
     div.style.animationDelay = `${i * 60}ms`;
     const typeClass = { think: 'think', action: 'action', result: 'result', error: 'step-error' }[step.type] || '';
@@ -244,16 +240,9 @@ window.vote = async function(choice) {
     sessionVotes.skip++;
   }
 
-  // Reveal model names
-  $('model-a-name').textContent = 'gpt-4o';   // replaced by vote response
-  $('model-b-name').textContent = 'claude';
-  $('model-a-name').classList.remove('hidden');
-  $('model-b-name').classList.remove('hidden');
-
   $('vote-area').style.display = 'none';
   $('next-area').style.display = 'flex';
 
-  // Post vote + get model reveal
   try {
     const res  = await fetch('/api/vote', {
       method:  'POST',
@@ -262,8 +251,15 @@ window.vote = async function(choice) {
     });
     const data = await res.json();
 
-    if (data.model_a) $('model-a-name').textContent = data.model_a;
-    if (data.model_b) $('model-b-name').textContent = data.model_b;
+    // Reveal actual model names from D1
+    if (data.model_a) {
+      $('model-a-name').textContent = data.model_a;
+      $('model-a-name').classList.remove('hidden');
+    }
+    if (data.model_b) {
+      $('model-b-name').textContent = data.model_b;
+      $('model-b-name').classList.remove('hidden');
+    }
 
     const winner = choice === 'A' ? data.model_a : choice === 'B' ? data.model_b : 'skipped';
     const tally  = `α ${sessionVotes.A}  ·  β ${sessionVotes.B}  ·  skipped ${sessionVotes.skip}`;
