@@ -1,5 +1,7 @@
 # Agent Arena
 
+<https://AgentsArena.live>
+
 Head-to-head agentic task evaluation. Two anonymous LLMs get the same task, 
 you inspect their reasoning traces and vote for the better agent.
 
