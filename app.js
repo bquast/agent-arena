@@ -1,4 +1,4 @@
-// AgentArena — app.js
+// AgentArena.live — app.js
 
 let currentTask  = null;
 let taskPool     = [];
