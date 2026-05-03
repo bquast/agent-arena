@@ -131,3 +131,4 @@ export async function onRequest(context) {
   const list = TASKS.map(({ id, name, description, category }) => ({ id, name, description, category }));
   return new Response(JSON.stringify(list), { headers });
 }
+
